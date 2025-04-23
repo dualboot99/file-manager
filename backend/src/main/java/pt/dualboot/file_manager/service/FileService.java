@@ -12,7 +12,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.attribute.UserDefinedFileAttributeView;
@@ -27,9 +26,7 @@ import static pt.dualboot.file_manager.utils.Constants.UPLOAD_DIRECTORY;
 public class FileService {
 
     public SavedFileDTO saveFile(MultipartFile file) throws IOException {
-        String fileExtension = getFileExtension(file);
-
-        String fileName = UUID.randomUUID() + fileExtension;
+        String fileName = UUID.randomUUID().toString();
         log.info("Renaming file to {}", fileName);
         String filePath = UPLOAD_DIRECTORY + fileName;
 
@@ -58,8 +55,9 @@ public class FileService {
         File file = getFile(fileName);
         String originalFileName = getOriginalFileName(file);
         File originalFile = new File(UPLOAD_DIRECTORY + originalFileName);
-
+        log.info("Renaming to original file: {}", originalFile.getName());
         if (file.renameTo(originalFile)) {
+            log.info("File renamed successfully... Deleting it!");
             FileDTO fileDTO = FileDTO.builder().name(originalFileName).content(Files.readAllBytes(originalFile.toPath())).build();
             if (!originalFile.delete()) {
                 log.error("Failed to delete file: {}", originalFileName);
@@ -68,6 +66,8 @@ public class FileService {
             }
             return fileDTO;
         }
+        log.error("Failed to rename file: {}", originalFileName);
+        log.info("Deleting file: {}", fileName);
         if (!file.delete()) {
             log.error("Failed to delete file: {}", fileName);
         } else {
@@ -81,33 +81,21 @@ public class FileService {
         return FileDataDTO.builder().name(getOriginalFileName(file)).build();
     }
 
-    private String getFileExtension(MultipartFile file) {
-        if (file.isEmpty()) {
-            throw new IllegalArgumentException("File is empty");
-        }
-
-        String originalFilename = file.getOriginalFilename();
-        if (originalFilename == null) {
-            throw new IllegalArgumentException("Filename is empty");
-        }
-        String fileExtension = originalFilename.substring(originalFilename.lastIndexOf("."));
-
-        if(fileExtension.isEmpty()) {
-            throw new IllegalArgumentException("Filename extension is empty");
-        }
-        return fileExtension;
-    }
-
     private String getOriginalFileName(File file) throws IOException {
+        log.info("Getting original name of file: {}", file.getName());
         UserDefinedFileAttributeView userDefView = Files.getFileAttributeView(file.toPath(), UserDefinedFileAttributeView.class);
         ByteBuffer byteBuffer = ByteBuffer.allocate(userDefView.size(ORIGINAL_NAME_FILE_ATTR));
         userDefView.read(ORIGINAL_NAME_FILE_ATTR, byteBuffer);
         byteBuffer.flip();
-        return Charset.defaultCharset().decode(byteBuffer).toString();
+        String originalName = new String(byteBuffer.array(), StandardCharsets.UTF_8);
+        log.info("Original name of file: {}", originalName);
+        return originalName;
     }
 
     private File getFile(String fileName) throws FileNotFoundException {
-        File file = new File(UPLOAD_DIRECTORY + fileName);
+        String filePath = UPLOAD_DIRECTORY + fileName;
+        log.info("Getting file: {}", filePath);
+        File file = new File(filePath);
         if (!file.exists()) {
             throw new FileNotFoundException("File not found!");
         }
