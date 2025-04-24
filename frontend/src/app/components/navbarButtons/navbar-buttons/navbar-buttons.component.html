@@ -1,0 +1,18 @@
+<div class="navbar-buttons">
+  <button
+    mat-button
+    [class]="{ active: activeRoute() === 'upload' }"
+    (click)="updateActiveRoute('upload')"
+  >
+    <mat-icon>upload</mat-icon>
+    Upload
+  </button>
+  <button
+    mat-button
+    [class]="{ active: activeRoute() === 'download' }"
+    (click)="updateActiveRoute('download')"
+  >
+    <mat-icon>download</mat-icon>
+    Download
+  </button>
+</div>

@@ -1,0 +1,43 @@
+.upload__file-uploader {
+  line-height: 2;
+
+  &-card {
+    min-height: 100%;
+    color: var(--mat-sys-on-background);
+
+    &:hover {
+      cursor: pointer;
+    }
+
+    &-content-file-input {
+      display: none;
+    }
+  }
+}
+
+.center {
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media screen and (min-width: 600px) {
+  :host {
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  .upload__file-uploader,
+  .upload__file-uploader-card,
+  .upload__file-uploader-card-content {
+    height: 100%;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  :host {
+    overflow: hidden;
+  }
+}

@@ -1,0 +1,18 @@
+.upload-file-dialog {
+  padding: 12px;
+  color: var(--mat-sys-on-background);
+
+  &__content {
+    display: flex;
+    padding: 0;
+
+    &-copy-button {
+      margin-left: auto;
+      margin-right: 0;
+    }
+  }
+
+  &__actions {
+    padding: 0;
+  }
+}

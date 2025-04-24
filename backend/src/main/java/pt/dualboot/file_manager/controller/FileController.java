@@ -15,6 +15,7 @@ import pt.dualboot.file_manager.service.FileService;
 
 import java.io.IOException;
 
+@CrossOrigin(origins = "http://localhost:4200/,https://rmourato-dev.dynip.sapo.pt", maxAge = 3600)
 @Slf4j
 @AllArgsConstructor
 @RestController

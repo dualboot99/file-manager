@@ -1,0 +1,17 @@
+<div class="app">
+  <mat-toolbar class="app__navbar">
+    <button mat-button (click)="goTo('upload')">
+      <mat-icon>home</mat-icon>
+      <h1>FileShare 250</h1>
+    </button>
+    <div class="app__navbar-buttons">
+      <app-navbar-buttons
+        [activeRoute]="activeRoute()"
+        (goTo)="goTo($event)"
+      ></app-navbar-buttons>
+    </div>
+  </mat-toolbar>
+  <div class="app__content">
+    <router-outlet></router-outlet>
+  </div>
+</div>
