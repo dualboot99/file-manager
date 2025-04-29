@@ -1,11 +1,42 @@
 <div class="navbar-buttons">
+  @if (smallScreen()) {
+  <button
+    mat-icon-button
+    [class]="{ active: activeRoute() === 'tos' }"
+    (click)="updateActiveRoute('tos')"
+  >
+    <mat-icon>info</mat-icon>
+  </button>
+  <button
+    mat-icon-button
+    [class]="{ active: activeRoute() === 'upload' }"
+    (click)="updateActiveRoute('upload')"
+  >
+    <mat-icon>upload</mat-icon>
+  </button>
+  <button
+    mat-icon-button
+    [class]="{ active: activeRoute() === 'download' }"
+    (click)="updateActiveRoute('download')"
+  >
+    <mat-icon>download</mat-icon>
+  </button>
+  } @else {
+  <button
+    mat-button
+    [class]="{ active: activeRoute() === 'tos' }"
+    (click)="updateActiveRoute('tos')"
+  >
+    <mat-icon>info</mat-icon>
+    <span>Terms of Service</span>
+  </button>
   <button
     mat-button
     [class]="{ active: activeRoute() === 'upload' }"
     (click)="updateActiveRoute('upload')"
   >
     <mat-icon>upload</mat-icon>
-    Upload
+    <span>Upload</span>
   </button>
   <button
     mat-button
@@ -13,6 +44,7 @@
     (click)="updateActiveRoute('download')"
   >
     <mat-icon>download</mat-icon>
-    Download
+    <span>Download</span>
   </button>
+  }
 </div>

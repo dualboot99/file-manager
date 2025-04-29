@@ -1,1 +1,1 @@
-export type NavbarRoute = 'upload' | 'download';
+export type NavbarRoute = 'upload' | 'download' | 'tos';

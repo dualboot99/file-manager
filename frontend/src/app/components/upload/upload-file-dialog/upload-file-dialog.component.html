@@ -1,10 +1,12 @@
 <div class="upload-file-dialog">
   <h2 mat-dialog-title>File {{ data.fileName }} uploaded successfully!</h2>
   <mat-dialog-content class="upload-file-dialog__content">
-    <span> <b>Your file id:</b> {{ data.fileId }} </span>
+    <span class="upload-file-dialog__content-file-id">
+      <b>Your file id:</b> {{ data.fileId }}
+    </span>
     <button
       mat-icon-button
-      class="upload-file-dialog__content-copy-button"
+      aria-label="copy file id to clipboard"
       [cdkCopyToClipboard]="data.fileId"
     >
       <mat-icon>content_copy</mat-icon>

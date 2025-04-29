@@ -1,32 +1,18 @@
-<div class="upload__file-uploader">
-  <mat-card class="upload__file-uploader-card" (click)="openFileInput()">
-    <mat-card-content class="upload__file-uploader-card-content center">
-      <div class="center">
-        <mat-spinner
-          mode="determinate"
-          [value]="fileUploadProgress()"
-          diameter="200"
-          aria-label="upload progress"
-        ></mat-spinner>
-        <div style="position: relative; top: -115px; left: 83px">
-          {{ fileUploadProgressDescription() }}
-        </div>
-      </div>
-      @if (!fileUploaded()) {
-      <p class="upload__file-uploader-card-content-drag-drop center">
-        Click here to upload it
-      </p>
-      } @else if (fileUploadProgress() < 100) {
-      <p>Uploading {{ fileUploaded()?.name }}</p>
-      } @else {
-      <p>{{ fileUploaded()?.name }} uploaded successfully!</p>
-      }
-      <input
-        #fileInput
-        type="file"
-        class="upload__file-uploader-card-content-file-input"
-        (change)="uploadFile()"
-      />
-    </mat-card-content>
-  </mat-card>
+<div>
+  <mat-spinner
+    class="file-upload-progress center"
+    mode="determinate"
+    [value]="fileUploadProgress()"
+    diameter="200"
+    aria-label="upload progress"
+  ></mat-spinner>
+  <div class="file-upload-progress-description justify-center">
+    {{ fileUploadProgressDescription() }}
+  </div>
 </div>
+<p class="justify-center">
+  @if (!fileUploaded()) { Click here to upload a file }@else if
+  (fileUploadProgress() < 100) { Uploading {{ fileUploaded()?.name }}} @else {
+  {{ fileUploaded()?.name }} uploaded successfully! }
+</p>
+<input #fileInput type="file" class="hidden" (change)="uploadFile()" />

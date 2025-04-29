@@ -1,5 +1,5 @@
 import { Component, inject, input, output } from '@angular/core';
-import { MatButton } from '@angular/material/button';
+import { MatButton, MatIconButton } from '@angular/material/button';
 import {
   MatDialogContent,
   MatDialogActions,
@@ -8,11 +8,7 @@ import {
 } from '@angular/material/dialog';
 import { MatIcon } from '@angular/material/icon';
 import { ClipboardModule } from '@angular/cdk/clipboard';
-
-export interface UploadFileDialogData {
-  fileName: string;
-  fileId: string;
-}
+import { DialogData } from '../../../models/DialogData';
 
 @Component({
   selector: 'app-upload-file-dialog',
@@ -20,6 +16,7 @@ export interface UploadFileDialogData {
     MatDialogActions,
     MatDialogContent,
     MatButton,
+    MatIconButton,
     MatIcon,
     ClipboardModule,
   ],
@@ -28,7 +25,7 @@ export interface UploadFileDialogData {
 })
 export class UploadFileDialogComponent {
   readonly dialogRef = inject(MatDialogRef<UploadFileDialogComponent>);
-  readonly data = inject<UploadFileDialogData>(MAT_DIALOG_DATA);
+  readonly data = inject<DialogData>(MAT_DIALOG_DATA);
 
   closeDialog() {
     this.dialogRef.close();

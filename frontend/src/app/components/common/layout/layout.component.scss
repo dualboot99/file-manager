@@ -1,5 +1,6 @@
 @media screen and (max-width: 600px) {
-  .download {
+  .layout {
+    height: unset;
     display: flex;
     flex-direction: column;
     gap: 12px;
@@ -7,21 +8,10 @@
 }
 
 @media screen and (min-width: 600px) {
-  .download {
+  .layout {
+    height: 90%;
     display: grid;
     grid-template-columns: 1fr 1fr;
     column-gap: 12px;
-  }
-}
-
-@media screen and (min-width: 600px) {
-  .download {
-    height: 90%;
-  }
-}
-
-@media screen and (max-width: 600px) {
-  .download {
-    height: unset;
   }
 }

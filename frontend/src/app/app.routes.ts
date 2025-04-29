@@ -20,6 +20,12 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'tos',
+    pathMatch: 'full',
+    loadComponent: () =>
+      import('./components/tos/tos.component').then((c) => c.TosComponent),
+  },
+  {
     path: '**',
     redirectTo: '/upload',
   },

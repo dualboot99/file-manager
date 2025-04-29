@@ -1,0 +1,45 @@
+<div class="center">
+  @if (!fileDownloaded()) {
+  <mat-form-field appearance="outline">
+    <mat-label>File Id</mat-label>
+    <input
+      matInput
+      [formControl]="fileId"
+      required
+      (blur)="updateErrorMessage()"
+    />
+    @if (fileId.invalid) {
+    <mat-error>{{ errorMessage() }}</mat-error>
+    }
+  </mat-form-field>
+  <button
+    mat-button
+    (click)="getFile()"
+    [disabled]="fileId.invalid || loadingFile()"
+  >
+    <mat-icon>search</mat-icon> Search
+  </button>
+  } @else {
+  <mat-spinner
+    class="file-download-progress"
+    mode="determinate"
+    [value]="fileDownloadProgress()"
+    diameter="200"
+    aria-label="upload progress"
+  ></mat-spinner>
+  <div class="justify-center">
+    {{ fileDownloadProgressDescription() }}
+  </div>
+  }
+</div>
+@if (fileDownloaded()) { @if (fileDownloadProgress() < 100) {
+<p class="justify-center">Download {{ fileDownloaded()?.name }}</p>
+} @else {
+<div class="center">
+  <p>{{ fileDownloaded()?.name }} downloaded successfully!</p>
+  <button mat-button (click)="reset()" class="justify-center">
+    <mat-icon>refresh</mat-icon> Download other file
+  </button>
+</div>
+
+} }

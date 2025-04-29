@@ -1,16 +1,11 @@
-.upload-file-dialog {
+.download-file-dialog {
   padding: 12px;
   color: var(--mat-sys-on-background);
 
   &__content {
     display: flex;
+    flex-direction: column;
     padding: 0;
-    overflow: hidden;
-    gap: 6px;
-
-    &-file-id {
-      align-content: center;
-    }
   }
 
   &__actions {

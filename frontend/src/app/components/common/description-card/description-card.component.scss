@@ -1,10 +1,9 @@
-.upload__description {
+.description__card {
   line-height: 2;
+  min-height: 100%;
+  color: var(--mat-sys-on-background);
 
-  &-card {
-    min-height: 100%;
-    color: var(--mat-sys-on-background);
-
+  &-content {
     &-title {
       font-size: xx-large;
       font-weight: bold;
@@ -14,12 +13,12 @@
 
 @media screen and (min-width: 600px) {
   :host {
-    overflow: auto;
+    overflow-y: auto;
   }
 }
 
 @media screen and (max-width: 600px) {
   :host {
-    overflow: hidden;
+    overflow-y: hidden;
   }
 }

@@ -1,0 +1,10 @@
+<mat-card class="description__card" [class.center]="!title()">
+  <mat-card-content class="description__card-content" [class.center]="!title()">
+    @if (title()) {
+    <div class="description__card-content-title">
+      {{ title() }}
+    </div>
+    }
+    <ng-content></ng-content>
+  </mat-card-content>
+</mat-card>

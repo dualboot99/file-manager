@@ -1,0 +1,15 @@
+<div class="download-file-dialog">
+  <h2 mat-dialog-title>Confirm Download</h2>
+  <mat-dialog-content class="download-file-dialog__content">
+    <span>You're about to download {{ data.fileName }}.</span>
+    <span>
+      This is a one-time download - once you proceed, the file will be
+      <b>permanently deleted</b> from our servers. Are you sure you want to
+      continue?
+    </span>
+  </mat-dialog-content>
+  <mat-dialog-actions class="download-file-dialog__actions">
+    <button mat-button (click)="closeDialog()">Cancel</button>
+    <button mat-flat-button (click)="download()">Yes, Download</button>
+  </mat-dialog-actions>
+</div>

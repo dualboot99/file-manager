@@ -1,21 +1,23 @@
-import { HttpEvent, HttpEventType, HttpRequest } from '@angular/common/http';
+import { HttpEvent, HttpEventType } from '@angular/common/http';
 import {
   Component,
   computed,
   ElementRef,
+  HostBinding,
+  HostListener,
   signal,
   viewChild,
 } from '@angular/core';
-import { MatCard, MatCardContent } from '@angular/material/card';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
-import { FileManagerService } from '../../../services/file-manager.service';
-import { last, map, tap } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { last, map, tap } from 'rxjs';
+import { FileManagerService } from '../../../services/file-manager.service';
 import { UploadFileDialogComponent } from '../upload-file-dialog/upload-file-dialog.component';
+import { SavedFileDTO } from '../../../models/SavedFileDTO';
 
 @Component({
   selector: 'app-upload-file-uploader',
-  imports: [MatCard, MatCardContent, MatProgressSpinner],
+  imports: [MatProgressSpinner],
   templateUrl: './upload-file-uploader.component.html',
   styleUrl: './upload-file-uploader.component.scss',
 })
@@ -31,6 +33,11 @@ export class UploadFileUploaderComponent {
   fileUploaded = signal<File | undefined>(undefined);
   fileUploadedId = signal<string | undefined>(undefined);
   fileUploadedError = signal<string | undefined>(undefined);
+
+  @HostListener('click', ['$event'])
+  onClick() {
+    this.openFileInput();
+  }
 
   constructor(
     private fileManagerService: FileManagerService,
@@ -61,7 +68,7 @@ export class UploadFileUploaderComponent {
   }
 
   /** Return distinct message for sent, upload progress, & response events */
-  private getCurrentProgress(event: HttpEvent<any>): number {
+  private getCurrentProgress(event: HttpEvent<SavedFileDTO>): number {
     switch (event.type) {
       case HttpEventType.Sent:
         return 1;
@@ -73,7 +80,7 @@ export class UploadFileUploaderComponent {
         return percentDone;
       case HttpEventType.Response: {
         if (event.ok) {
-          this.fileUploadedId.set(event.body.path);
+          this.fileUploadedId.set(event.body!.path);
           this.openDialog();
         } else {
           this.fileUploadedError.set(
@@ -88,12 +95,15 @@ export class UploadFileUploaderComponent {
   }
 
   private openDialog() {
+    const activeElement = document.activeElement as HTMLElement; // Get the currently focused element
+    activeElement.blur(); // Remove focus from the button
     this.dialog.open(UploadFileDialogComponent, {
       data: {
         fileName: this.fileUploaded()?.name,
         fileId: this.fileUploadedId(),
       },
       disableClose: true,
+      autoFocus: false,
     });
   }
 }

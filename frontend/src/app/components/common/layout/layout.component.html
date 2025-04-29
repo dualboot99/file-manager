@@ -1,0 +1,8 @@
+<div class="layout">
+  <app-description [title]="leftCardTitle()">
+    <ng-content select="[left-card]"></ng-content>
+  </app-description>
+  <app-description [title]="rightCardTitle()">
+    <ng-content select="[right-card]"></ng-content>
+  </app-description>
+</div>

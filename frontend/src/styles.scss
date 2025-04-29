@@ -21,3 +21,20 @@ body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
+
+.justify-center {
+  display: flex !important;
+  justify-content: center;
+}
+
+.center {
+  display: flex !important;
+  justify-content: center;
+  flex-direction: column;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.hidden {
+  display: none;
+}
