@@ -22,6 +22,7 @@ import { DownloadFileDialogComponent } from '../download-file-dialog/download-fi
 import { HttpEvent, HttpEventType } from '@angular/common/http';
 import { last, map, tap } from 'rxjs';
 import {
+  downloadBlob,
   getFileNameFromContentDispositionHeader,
   handlingResponse,
 } from '../../../utils/FileDownloadAsBlob';
@@ -55,6 +56,8 @@ export class DownloadFileDownloaderComponent {
 
   errorMessage = signal('');
 
+  private fileIdToDownload = signal<string>('');
+
   constructor(
     private fileManagerService: FileManagerService,
     private snackBar: MatSnackBar,
@@ -75,17 +78,17 @@ export class DownloadFileDownloaderComponent {
     this.snackBar.dismiss();
     this.loadingFile.set(true);
     this.fileId.disable();
-    const fileId = this.fileId.value!;
-    this.fileManagerService.getFile(fileId).subscribe({
+    this.fileIdToDownload.set(this.fileId.value!);
+    this.fileManagerService.getFile(this.fileIdToDownload()).subscribe({
       next: (data: FileDataDTO) => {
         const dialogRef = this.dialog.open(DownloadFileDialogComponent, {
-          data: { fileName: data.name, fileId },
+          data: { fileName: data.name, fileId: this.fileIdToDownload() },
           disableClose: true,
           autoFocus: false,
         });
         dialogRef.componentInstance.downloadFile.subscribe(() => {
           this.fileDownloaded.set(data);
-          this.downloadFile(fileId);
+          this.downloadFile(this.fileIdToDownload());
         });
         dialogRef.afterClosed().subscribe(() => {
           this.fileId.enable();
@@ -113,7 +116,7 @@ export class DownloadFileDownloaderComponent {
     this.fileManagerService
       .downloadFile(fileId)
       .pipe(
-        map((event) => this.getCurrentProgress(event)),
+        map((event) => this.getCurrentProgress(event as HttpEvent<Blob>)),
         tap((progress) => this.fileDownloadProgress.set(progress)),
         last() // return last (completed) message to caller
       )
@@ -137,12 +140,20 @@ export class DownloadFileDownloaderComponent {
         return percentDone;
       case HttpEventType.Response: {
         if (event.status === 200) {
-          handlingResponse(
-            event.body,
-            getFileNameFromContentDispositionHeader(
-              event.headers.get('Content-Disposition') ?? ''
-            )
-          );
+          if (this.fileManagerService.isProdEnv()) {
+            this.fileManagerService
+              .downloadFromBrowserDB(this.fileIdToDownload())
+              .subscribe((data) => {
+                downloadBlob(data, this.fileDownloaded()!.name);
+              });
+          } else {
+            handlingResponse(
+              event.body,
+              getFileNameFromContentDispositionHeader(
+                event.headers.get('Content-Disposition') ?? ''
+              )
+            );
+          }
         } else {
           this.snackBar.open(
             `Failed to upload file due to a ${event.status} error`,

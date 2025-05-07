@@ -1,27 +1,41 @@
-export enum BACKEND_URL {
-  'local' = 'http://localhost:8080',
-  'prod' = 'https://rmourato-dev.dynip.sapo.pt',
+export enum ENV {
+  LOCAL = 'local',
+  INTERNAL = 'internal',
+  PROD = 'prod1',
 }
 
-export enum FRONTEND_HOSTNAME {
-  'local' = 'localhost',
-  'prod' = 'rmourato-dev.dynip.sapo.pt',
-}
+type DOMAIN =
+  | 'localhost'
+  | 'file-manager-server'
+  | 'rmourato-dev.dynip.sapo.pt';
+
+const BACKEND_URL = {
+  [ENV.LOCAL]: 'http://localhost:8080',
+  [ENV.INTERNAL]: 'http://file-manager-server:8080',
+  [ENV.PROD]: 'https://rmourato-dev.dynip.sapo.pt',
+};
+
+const ENV_BY_FRONTEND_HOSTNAME: { [k in DOMAIN]: ENV } = {
+  localhost: ENV.LOCAL,
+  'file-manager-server': ENV.INTERNAL,
+  'rmourato-dev.dynip.sapo.pt': ENV.PROD,
+};
 
 const baseUrl = 'file-manager/api';
 
-const URL_MAP = {
-  [FRONTEND_HOSTNAME.local]: BACKEND_URL.local,
-  [FRONTEND_HOSTNAME.prod]: BACKEND_URL.prod,
-};
-
 let backendUrl = '';
 
-export function getBackendUrl(): string {
+export function getBackendUrl(env: ENV): string {
   if (!backendUrl) {
-    const hostname = window.location.hostname as FRONTEND_HOSTNAME;
-    const url = URL_MAP[hostname];
-    backendUrl = url ? `${url}/${baseUrl}` : `${BACKEND_URL.prod}/`;
+    backendUrl = `${BACKEND_URL[env]}/${baseUrl}`;
   }
   return backendUrl;
+}
+
+export function getEnv(): ENV {
+  const hostname = window.location.hostname;
+  if (Object.keys(ENV_BY_FRONTEND_HOSTNAME).includes(hostname)) {
+    return ENV_BY_FRONTEND_HOSTNAME[hostname as DOMAIN];
+  }
+  return ENV.PROD;
 }

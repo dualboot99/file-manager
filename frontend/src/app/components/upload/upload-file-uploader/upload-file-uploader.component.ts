@@ -14,6 +14,7 @@ import { last, map, tap } from 'rxjs';
 import { FileManagerService } from '../../../services/file-manager.service';
 import { UploadFileDialogComponent } from '../upload-file-dialog/upload-file-dialog.component';
 import { SavedFileDTO } from '../../../models/SavedFileDTO';
+import { ENV } from '../../../utils/BackendUrl';
 
 @Component({
   selector: 'app-upload-file-uploader',
@@ -80,8 +81,17 @@ export class UploadFileUploaderComponent {
         return percentDone;
       case HttpEventType.Response: {
         if (event.ok) {
-          this.fileUploadedId.set(event.body!.path);
-          this.openDialog();
+          if (this.fileManagerService.isProdEnv()) {
+            this.fileManagerService
+              .uploadToBrowserDB(this.fileUploaded()!)
+              .subscribe((savedFile) => {
+                this.fileUploadedId.set(savedFile.path);
+                this.openDialog();
+              });
+          } else {
+            this.fileUploadedId.set(event.body!.path);
+            this.openDialog();
+          }
         } else {
           this.fileUploadedError.set(
             `Failed to upload file due to a ${event.status} error`

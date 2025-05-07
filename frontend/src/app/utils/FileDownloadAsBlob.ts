@@ -11,10 +11,10 @@ export function getFileNameFromContentDispositionHeader(
 
 export function handlingResponse(res: any, filename: string) {
   const blob = new Blob([res], { type: res.type });
-  downloadFile(blob, filename);
+  downloadBlob(blob, filename);
 }
 
-export function downloadFile(file: Blob, fileName: string = '') {
+export function downloadBlob(file: Blob, fileName: string = '') {
   const downloadLink = document.createElement('a');
   const objectUrl = URL.createObjectURL(file);
 
