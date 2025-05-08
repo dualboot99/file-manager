@@ -11,8 +11,6 @@
   </div>
 </div>
 <p class="justify-center">
-  @if (!fileUploaded()) { Click here to upload a file }@else if
-  (fileUploadProgress() < 100) { Uploading {{ fileUploaded()?.name }}} @else {
-  {{ fileUploaded()?.name }} uploaded successfully! }
+  {{ statusMessage() }}
 </p>
 <input #fileInput type="file" class="hidden" (change)="uploadFile()" />

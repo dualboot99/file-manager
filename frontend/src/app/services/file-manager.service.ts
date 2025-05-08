@@ -1,4 +1,9 @@
-import { HttpClient, HttpEvent, HttpRequest } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpEvent,
+  HttpHeaders,
+  HttpRequest,
+} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IDBPDatabase, openDB } from 'idb';
 import { Observable, Subject } from 'rxjs';
@@ -66,9 +71,7 @@ export class FileManagerService {
   uploadToBrowserDB(file: File): Observable<SavedFileDTO> {
     const savedFile$ = new Subject<SavedFileDTO>();
     const fileId = Date.now().toString();
-    console.log(`Storing ${fileId} into db:`, this.db);
-    this.db?.put(STORE_NAME, file, fileId).then((storedFile) => {
-      console.log(storedFile);
+    this.db?.put(STORE_NAME, file, fileId).then(() => {
       savedFile$.next({ path: fileId });
     });
     return savedFile$;
@@ -98,8 +101,11 @@ export class FileManagerService {
   private mockGetFile(fileId: string): Observable<FileDataDTO> {
     const file$ = new Subject<FileDataDTO>();
     this.db?.get(STORE_NAME, fileId).then((file) => {
-      console.log(file);
-      file$.next({ name: file.name });
+      if (!file) {
+        file$.error('File not found');
+      } else {
+        file$.next({ name: file.name });
+      }
     });
     return file$;
   }

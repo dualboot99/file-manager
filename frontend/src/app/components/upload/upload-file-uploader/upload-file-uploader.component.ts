@@ -34,6 +34,19 @@ export class UploadFileUploaderComponent {
   fileUploaded = signal<File | undefined>(undefined);
   fileUploadedId = signal<string | undefined>(undefined);
   fileUploadedError = signal<string | undefined>(undefined);
+  statusMessage = computed(() => {
+    let message;
+    if (!this.fileUploaded()) {
+      message = 'Click here to upload a file';
+    } else if (this.fileUploadProgress() < 100) {
+      message = `Uploading ${this.fileUploaded()?.name}`;
+    } else if (this.fileUploadedError()) {
+      message = this.fileUploadedError();
+    } else {
+      message = `${this.fileUploaded()?.name} uploaded successfully!`;
+    }
+    return message;
+  });
 
   @HostListener('click', ['$event'])
   onClick() {

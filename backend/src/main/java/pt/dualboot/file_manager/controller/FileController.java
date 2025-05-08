@@ -48,7 +48,7 @@ public class FileController {
     }
 
     @GetMapping("/v1/file/{filePath}/download")
-    public ResponseEntity<byte[]> downloadFile(@RequestHeader("Origin") String origin, @PathVariable String filePath) throws IOException {
+    public ResponseEntity<byte[]> downloadFile(@RequestHeader(value = "Origin", required = false) String origin, @PathVariable String filePath) throws IOException {
         log.info("Downloading file: {}", filePath);
         if (isProd(origin)) {
             log.warn("Production mode... Returning an empty array");
