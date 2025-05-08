@@ -9,7 +9,7 @@ type DOMAIN = 'localhost' | '192.168.1.100' | 'rmourato-dev.dynip.sapo.pt';
 const BACKEND_URL = {
   [ENV.LOCAL]: 'http://localhost:8081',
   [ENV.INTERNAL]: 'http://192.168.1.100',
-  [ENV.PROD]: 'https://rmourato-dev.dynip.sapo.pt/file-manager-250',
+  [ENV.PROD]: 'https://rmourato-dev.dynip.sapo.pt/file-share-250',
 };
 
 const ENV_BY_FRONTEND_HOSTNAME: { [k in DOMAIN]: ENV } = {
